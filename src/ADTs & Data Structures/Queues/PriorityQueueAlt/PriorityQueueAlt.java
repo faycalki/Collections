@@ -1,5 +1,6 @@
 /**
  * Priority Queue Implementation using Doubly Linked Lists as the underlying data structure.
+ * Note: this is a inheritance-based implementation using a DoublyLinkedList. It is better to use a composition relation instead if using a underlying data structure.
  * @implSpec This could also be Implemented by extending a Queue, however, that would require changing of the PriorityQueueADT due to the PriQueueUnderflowException and PriQueueOverflowException.
  * The current implementation uses a simple approach through Linked Lists. It, forcibly, only applies the principles of a Queue (dequeue from front, enqueue to back). FIFO.
  * @implNote the performance of this Priority Queue can  be vastly improved by considering the size of the queue prior to enquiuing. If the position where we wish to enqueue is beyond half of the queue, then we should traverse backwards from the Doubly Linked List, then creating a link from there to the rest of the following nodes, as well as a link for the previous nodes.

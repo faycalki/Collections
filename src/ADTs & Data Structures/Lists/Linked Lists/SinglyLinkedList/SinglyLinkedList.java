@@ -2,17 +2,15 @@
 /**
  * The LinkedList class is an implementation of the List ADT as a Singly Linked List.
  * @implSpec This Linked List compares the node's internal data reference (not the Node's reference itself) denoted dataFind, in order to add and remove from certain appropriate positions.
- * @implNote It may be better to refactor dataFind to a type Node<T> and call it inReference. However, that will reduce abstraction, hence why we've opted not to do that.
+ * @implNote keeps track of the tail Node, but is still O(n) because this is applied through a Singly-Node
  * @author Faycal Kilali, Dylan Kim
- * @version 1.1
+ * @version 1.2
  */
 public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
 {
-    protected int size = 0;
-    protected Node<T> head=null; // Recall that this variable actually points to the node. Possibly maybe the head node should always have an objectReference of null
-    protected Node<T> tail = null; // For optimization purposes (we don't wanna traverse the Linked List every single time we wish to remove or add to tail)
-
-
+    private int size = 0;
+    private Node<T> head = null; // Recall that this variable actually points to the node. Possibly maybe the head node should always have an objectReference of null
+    private Node<T> tail = null; // For optimization purposes (we don't wanna traverse the Linked List every single time we wish to remove or add to tail)
 
     /**
      * Note here the inNode only shows the visibility to the inner-class, we have to actually call the constructor and so on.
@@ -28,16 +26,19 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
         if (inData == null){
             throw new NullPointerException("Parameterized object is null");
         }
-
         if(isEmpty()){
             Node<T> newNode = new Node<T>(inData); // New head
-            head = newNode; // So we don't need to assign this? The head isn't a separate node, the first node is always the head node.
-            //head.setNext(newNode);
+            head = newNode;
         }
         else{
             Node<T> newNode = new Node<T>(inData, head);
             head = newNode;
-            // Previous node's reference becomes the new node's reference, and the previous node's reference changes to the new code.
+        }
+
+        // O(1) optimization for removals and additions to back
+        if (getSize() == 1) {
+            // If the list was empty before the addition, update the tail to the new node
+            tail = head;
         }
 
     }
@@ -63,16 +64,28 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
         if (inData == null){
             throw new NullPointerException("Parameterized object is null");
         }
-        if (head == null){
-            add(inData);
-            tail = head;
-            return;
+
+
+        // O(1) optimization
+        Node<T> insertNode = new Node<>(inData);
+
+        if (isEmpty()) {
+            // If the list is empty, the new node becomes both the head and the tail
+            head = insertNode;
+            tail = insertNode;
         }
 
-        Node<T> currNode = traverseLinkedList(null);
-        Node<T> insertNode = new Node(inData);
-        currNode.setNext(insertNode);
-        tail = insertNode;
+        else {
+            // Otherwise, add the new node to the tail and update the tail reference
+            tail.setNext(insertNode);
+            tail = insertNode;
+        }
+
+        // O(n) unoptimized
+        //Node<T> currNode = traverseLinkedList(null);
+        //Node<T> insertNode = new Node(inData);
+        //currNode.setNext(insertNode);
+        //tail = insertNode;
     }
 
 
@@ -103,28 +116,16 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
         }
 
         Node<T> insertNode = new Node<T>(inData);
-        Node<T> currNode = traverseLinkedList(dataFind); // Acquire Node at dataFind (or the Node right before it if dataFind can't be found)
-        // There are two cases. One where we are bounded by dataFind, in which case the following applies. One where we are bounded by Null
-        // but not by dataFind, in which case, we add to the end of the list.
-        //System.out.println(currNode.getData());
+        Node<T> currNode = traverseLinkedList(dataFind);
 
-        // Case where we are bounded by dataFind
         if (currNode.getNext() != null){
             insertNode.setNext(currNode.getNext());
-            // Check if position after dataFind exists or is null
-            //if (currNode.getNext().getNext() != null)
-            //{
-            //    insertNode.setNext(currNode.getNext().getNext());
-            //}
-            //else{
-                // Case where there is a null after currNode
-            //}
+        }
+        else{
+            tail = insertNode; // the new node we added becomes the new tail
         }
 
         currNode.setNext(insertNode); // Updates the previous node's pointer to the newly added node
-
-        //System.out.println(currNode.getData());
-        //System.out.println(insertNode.getData());
 
     }
 
@@ -143,7 +144,7 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
             return;
         }
 
-        if (inPosition == getSize()){
+        if (inPosition == getSize() - 1){
             addToBack(inData);
             return;
         }
@@ -279,6 +280,10 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
             Node<T> currNode = head;
             head = head.getNext();
 
+            if (head == null{
+                tail = null;
+            }
+
             // Returning the removed node's data
             return currNode.getData();
         }
@@ -304,6 +309,15 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
         Node<T> currNode = traverseLinkedListPriorToReference(null);
         Node<T> prevNode = traverseLinkedListPriorToReference(currNode.getData());
         prevNode.setNext(null);
+
+        if (getSize() <= 1) {
+            // If the list has one or zero elements after removal, update the tail to null
+            tail = null;
+        } else {
+            // If removing the tail, update the tail to the new last node
+            tail = prevNode;
+        }
+
         return currNode.getData();
     }
 
@@ -337,6 +351,12 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
             // If the node to remove is not the head
             previousNode.setNext(currentNode.getNext());
         }
+
+        // If removing the tail, update the tail to the new last node
+        if (currentNode.getNext() == null) {
+            tail = previousNode;
+        }
+
     }
 
     /**
@@ -360,7 +380,12 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
                     previousNode.setNext(currentNode.getNext());
                 }
                 removedAtLeastOnce = true;
-            } else {
+                // If removing the tail, update the tail to the new last node
+                if (currentNode.getNext() == null) {
+                    tail = previousNode;
+                }
+            }
+            else {
                 // Move to the next node
                 previousNode = currentNode;
             }
@@ -448,5 +473,24 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
     public void setHeadData(Node<T> inHead){
         head = inHead;
     }
+
+
+    /**
+     * Accessor method for the Tail Node
+     * @return returns the Tail Node
+     */
+    public Node<T> getTailData(){
+        return tail;
+    }
+
+
+    /**
+     * Mutator method to set the Tail of the Linked List.
+     * @param inTail the new Tail
+     */
+    public void setTailData(Node<T> inTail){
+        tail = inTail;
+    }
+
 
 }

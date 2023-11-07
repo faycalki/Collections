@@ -30,7 +30,7 @@ public class Stack<T> extends LinkedList<T> implements StackADT<T>{
         if (stack.isEmpty() == true) {
             throw new StackUnderflowException("StackUnderflowException: pop attempted on empty Stack.");
         } else {
-            stack.removeFromFront();
+            stack.removeFromBack();
         }
     }
 

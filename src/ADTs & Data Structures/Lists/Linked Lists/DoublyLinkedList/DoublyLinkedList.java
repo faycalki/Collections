@@ -3,18 +3,13 @@
  * @implSpec Doubly Linked List Implementation by extending a Linked List
  * @implNote This Implementation attempts to minimize overriding the methods of Linked List.
  * @author Faycal Kilali, Dylan Kim
- * @version 1.1
+ * @version 1.2
  * @param <T>, a generic parameter type.
  */
 
 public class DoublyLinkedList<T> extends SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>, DoublyLinkedListADT<T> {
 
-
-    //public Node<T> tail;
-    //public Node<T> currNode;
-
     public DoublyLinkedList() {
-        //tail = null;
     }
 
     /**
@@ -23,9 +18,6 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T> implements ListADT<
      * @return the data of the position node
      */
     public T checkDataAtLocation(int position) {
-        //Node<T> node = traverseLinkedListToPosition(position);
-        //System.out.println(node.getData());
-        //return node.getData();
         return traverseLinkedListToPosition(position).getData();
     }
 
@@ -36,7 +28,7 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T> implements ListADT<
     @Override
     public void addToFront(T data){
         super.addToFront(data);
-        if (getHeadData().getNext() != null){
+        if (super.getHeadData().getNext() != null){
             super.getHeadData().getNext().setPrevReference(getHeadData());
         }
     }
@@ -48,14 +40,10 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T> implements ListADT<
      */
     @Override
     public void addToBack(T data) {
-        // Below is terribly optimized, O(n^3). However, it will be refactored to O(1) or O(n) in the future.
-        super.addToBack(data); // O(n) unless tail is tracked appropriately then O(1)
-        Node<T> currNode = traverseLinkedList(null); // O(n), easy refactor to O(1)
-        Node<T> prevNode = traverseLinkedListPriorToReference(currNode.getData()); // O(n)
-        currNode.setPrevReference(prevNode);
+        Node<T> prevNode = super.getTailData();
+        super.addToBack(data);
+        super.getTailData().setPrevReference(prevNode); // Set new tail previous reference to the previous tail
     }
-
-
 
     /**
      * Adds a Node after dataFind Node. Does so by comparing the object value inside dataFind.
@@ -65,13 +53,14 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T> implements ListADT<
      */
     @Override
     public void addAfter(T inData, T dataFind) throws NullPointerException{
+
         if (inData == null){
             throw new NullPointerException("Parameterized object is null");
         }
 
         // Case where the Linked List is empty
-        if(head == null){
-            add(inData);
+        if(super.getHeadData() == null){
+            addToFront(inData);
             return;
         }
 
@@ -84,20 +73,12 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T> implements ListADT<
         // Case where we are bounded by dataFind
         if (currNode.getNext() != null){
             insertNode.setNext(currNode.getNext());
-            // Check if position after dataFind exists or is null
-            //if (currNode.getNext().getNext() != null)
-            //{
-            //    insertNode.setNext(currNode.getNext().getNext());
-            //}
-            //else{
-            // Case where there is a null after currNode
-            //}
+        }
+        else{
+            super.setTailData(insertNode);
         }
 
         currNode.setNext(insertNode); // Updates the previous node's pointer to the newly added node
-
-        //System.out.println(currNode.getData());
-        //System.out.println(insertNode.getData());
 
         // Additions
         insertNode.setPrevReference(currNode);
@@ -115,7 +96,7 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T> implements ListADT<
      */
     @Override
     public T removeFromFront() {
-        if (getHeadData().getNext() != null){
+        if (super.getHeadData().getNext() != null){
             super.getHeadData().getNext().setPrevReference(null); // Gets the second Node then sets its previous reference to null
         }
         return super.removeFromFront(); // Removes the first Node (the head Node) and sets the second Node as the new head Node. Returns the removed Node.
@@ -166,12 +147,19 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T> implements ListADT<
                 getHeadData().getNext().setPrevReference(getHeadData());
             }
 
-        } else {
+        }
+
+        else {
             // If the node to remove is not the head
             previousNode.setNext(currentNode.getNext());
 
             // Double-Linking
             currentNode.getNext().setPrevReference(previousNode);
+        }
+
+        // If removing the tail, update the tail to the new last node
+        if (currentNode.getNext() == null) {
+            super.setTailData(previousNode);
         }
     }
 
@@ -207,6 +195,10 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T> implements ListADT<
                     currentNode.getNext().setPrevReference(previousNode);
                 }
                 removedAtLeastOnce = true;
+                // If removing the tail, update the tail to the new last node
+                if (currentNode.getNext() == null) {
+                    super.setTailData(previousNode);
+                }
             }
             else {
                 // Move to the next node
