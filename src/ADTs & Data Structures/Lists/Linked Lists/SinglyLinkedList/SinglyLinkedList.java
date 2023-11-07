@@ -144,7 +144,7 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
             return;
         }
 
-        if (inPosition == getSize() - 1){
+        if (inPosition == getSize()){
             addToBack(inData);
             return;
         }
