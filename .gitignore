@@ -27,3 +27,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/.idea/kotlinc.xml
+/.idea/libraries/KotlinJavaRuntime.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/shelf/Uncommitted_changes_before_Update_at_2023-11-03_3_06_p_m__[Changes]/shelved.patch
+/.idea/shelf/Uncommitted_changes_before_Update_at_2023-11-03_3_06_p_m___Changes_.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
