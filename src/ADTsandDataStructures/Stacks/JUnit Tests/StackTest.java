@@ -17,7 +17,7 @@ class StackTest {
 
     @Test
     void push() {
-        // We are aware that the src.StackOverflowException makes no sense in our implementation so we assert it won't be thrown
+        // We are aware that the ADTsandDataStructures.StackOverflowException makes no sense in our implementation so we assert it won't be thrown
         assertDoesNotThrow(() -> stack.push(1));
     }
 

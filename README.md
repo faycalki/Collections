@@ -1,4 +1,4 @@
-# Collections
+# ADTsandDataStructures.Collections
 
 A repository consisting of multiple ADTs and some of their Implementations in Java.
 

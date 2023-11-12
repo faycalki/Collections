@@ -1,9 +1,11 @@
+package ADTsandDataStructures;
+
 /**
  General Interface for a class that implements a collection of type T.
  A collection allows addition, removal, and retrieval of elements.
  For this particular Collection ADT, we dictate:
  Null elements are prohibited, duplicate elements are allowed.
- @author Faycal Kilali
+ @author Faycal Kilali, Dale/Joyce/Weems
  @version 1.0
  **/
 

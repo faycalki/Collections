@@ -1,5 +1,5 @@
 /**
- * Blueprint for src.StackUnderflowException exception objects
+ * Blueprint for ADTsandDataStructures.StackUnderflowException exception objects
  * @author Faycal Kilali
  * @version 2023-10-12
  */
