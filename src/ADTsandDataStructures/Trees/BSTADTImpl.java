@@ -275,7 +275,7 @@ public class BSTADTImpl<T extends Comparable<T>> extends BSTNode<T> implements B
         @Override
         public boolean remove (T target){
             size--;
-            return false;
+            return true;
         }
 
         /**

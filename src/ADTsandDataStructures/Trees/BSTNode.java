@@ -58,5 +58,16 @@ public class BSTNode<T> {
         duplicates = inDuplicates;
     }
 
+    public int getNumChildren(){
+        int numOfChildren = 0;
+        if (this.leftChild != null){
+            numOfChildren++;
+        }
+        if (this.rightChild != null){
+            numOfChildren++;
+        }
+        return numOfChildren;
+    }
+
 
 }
