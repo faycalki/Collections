@@ -8,7 +8,7 @@ import java.util.Iterator;
  * @version 1.0
  * @param <T> the generic parameter
  */
-public interface BSTADT<T extends Comparable<T>> extends CollectionADT<T>, Iterable<T> {
+public interface BSTADT<T extends Comparable<T>> extends BTADT<T> {
 
     /**
      * Accessor for the minimum value in the tree.
@@ -44,26 +44,5 @@ public interface BSTADT<T extends Comparable<T>> extends CollectionADT<T>, Itera
      */
     T getClosestValue(T data);
 
-    /**
-     * Specifies traversal order for the Binary Search Tree.
-     */
-    enum Traversal {
-        PREORDER, INORDER, POSTORDER
-    }
 
-    /**
-     * Specifies an iterator based on the order of traversal.
-     * @param orderType the order of traversal
-     * @return iterator based on the specified traversal order
-     * @implNote In addition to this implementation, one must implement a separate iterator method due to the Iterable interface.
-     *           That should provide iteration in the "natural" order of tree elements, which for most cases in this context,
-     *           would be inorder traversal.
-     */
-    Iterator<T> getIterator(Traversal orderType);
-
-    /**
-     * Returns a string representation of the Binary Search Tree.
-     * @return a string representation of the tree
-     */
-    String toString();
 }

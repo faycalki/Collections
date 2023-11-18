@@ -1,3 +1,5 @@
+//import ADTsandDataStructures.Queues.Priority.*;
+
 /**
  * Priority Queue Implementation using Doubly Linked Lists as the underlying data structure.
  * @implSpec This could also be Implemented by extending a Queue, however, that would require changing of the PriorityQueueADT due to the PriQueueUnderflowException and PriQueueOverflowException.
@@ -235,17 +237,17 @@ public class PriorityQueue<T extends Priority<T>> implements PriorityQueueADT<T>
      * @implNote This should return a Priority<T> but due to time constraints we'll figure that out later.
      * @return the appropriate array
      */
-    protected PriorityTask[] toArray(){
-        @SuppressWarnings("unchecked") // Work-around https://docs.oracle.com/javase/8/docs/api/java/lang/SuppressWarnings.html
-        PriorityTask[] array = new PriorityTask[size()];
-        int index = 0;
-        Node<T> current = list.getHeadData();
-        while (current != null) {
-                array[index++] = (PriorityTask) current.getData();
-                current = current.getNext();
-            }
-            return array;
-        }
+//   protected PriorityTask[] toArray(){
+//       @SuppressWarnings("unchecked") // Work-around https://docs.oracle.com/javase/8/docs/api/java/lang/SuppressWarnings.html
+//       PriorityTask[] array = new PriorityTask[size()];
+//       int index = 0;
+//       Node<T> current = list.getHeadData();
+//       while (current != null) {
+//               array[index++] = (PriorityTask) current.getData();
+//               current = current.getNext();
+//           }
+//           return array;
+//       }
 
     /**
      * Accessor method for the front of the queue

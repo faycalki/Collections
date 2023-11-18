@@ -280,7 +280,7 @@ public class SinglyLinkedList<T> implements ListADT<T>, LinkedListADT<T>
             Node<T> currNode = head;
             head = head.getNext();
 
-            if (head == null{
+            if (head == null){
                 tail = null;
             }
 

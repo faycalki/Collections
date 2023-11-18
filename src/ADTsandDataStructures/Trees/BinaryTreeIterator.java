@@ -13,19 +13,19 @@ import java.util.Stack;
 public class BinaryTreeIterator<T> implements Iterator<T> {
 
 
-    private Stack<BSTNode<T>> stack;
-    private TraversalOrder traversalOrder;
+    private Stack<BTNode<T>> stack;
+    private Traversal traversalOrder;
 
     /**
      * Enforce the following actual parameters for the TraversalOrder formal parameters.
      */
-    private enum TraversalOrder {
+    public enum Traversal {
         PREORDER, INORDER, POSTORDER, PREORDER_REVERSE, INORDER_REVERSE, POSTORDER_REVERSE
     }
 
-    public BinaryTreeIterator(BSTNode<T> root, TraversalOrder orderChoice){
+    public BinaryTreeIterator(BTNode<T> root, Traversal orderChoice){
         traversalOrder = orderChoice;
-        stack = new Stack<BSTNode<T>>();
+        stack = new Stack<BTNode<T>>();
         if (root != null){
             initializeStack(root);
         }
@@ -38,7 +38,7 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
      * @implNote The lowest element in the stack (at the bottom) is the first element traversed to.
      * In other words, the order of pushing elements onto the stack determines the traversal order when popping them off. The first element pushed onto the stack is the first one to be processed, and the last element pushed is the last one to be processed.
      */
-    public void initializeStack(BSTNode<T> node) {
+    public void initializeStack(BTNode<T> node) {
         switch (traversalOrder) {
             case PREORDER:
                 initializePreOrderStack(node);
@@ -63,7 +63,7 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
      * @param node the current node to traverse from.
      * @implNote
      */
-    private void initializePreOrderStack(BSTNode<T> node){
+    private void initializePreOrderStack(BTNode<T> node){
 
         // General case
         stack.push(node); // push current Node
@@ -82,7 +82,7 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
      * Precondition: parameterized node is not null.
      * @param node the current node to traverse from.
      */
-    private void initializeInOrderStack(BSTNode<T> node){
+    private void initializeInOrderStack(BTNode<T> node){
 
 
             if (node.getLeftChild() != null){
@@ -99,7 +99,7 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
      * Initialize the stack based upon post-order (LRN).
      * @param node the node to begin initializing from
      */
-    private void initializePostOrderStack(BSTNode<T> node){
+    private void initializePostOrderStack(BTNode<T> node){
 
             if (node.getLeftChild() != null){
                 initializePostOrderStack(node.getLeftChild());
@@ -116,7 +116,7 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
      * Initializes the stack based upon reverse pre-order (NRL)
      * @param node the node to traverse from
      */
-    private void initializePreOrderReverseStack(BSTNode<T> node) {
+    private void initializePreOrderReverseStack(BTNode<T> node) {
         // General case
         stack.push(node); // push current Node
 
@@ -133,7 +133,7 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
      * Initializes the stack based upon reverse in-order (RNL)
      * @param node the node to traverse from
      */
-    private void initializeInOrderReverseStack(BSTNode<T> node) {
+    private void initializeInOrderReverseStack(BTNode<T> node) {
         if (node.getLeftChild() != null) {
             initializeInOrderReverseStack(node.getLeftChild());
         }
@@ -147,7 +147,7 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
      * Initializes the stack based upon reverse Post-Order (RLN)
      * @param node the node to traverse from
      */
-    private void initializePostOrderReverseStack(BSTNode<T> node) {
+    private void initializePostOrderReverseStack(BTNode<T> node) {
         if (node.getRightChild() != null){
             initializePostOrderReverseStack(node.getRightChild());
         }
@@ -184,6 +184,20 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
         }
         return stack.pop().getData();
     }
+
+    /**
+     * Returns the next Node in the iteration.
+     *
+     * @return the next Node in the iteration
+     * @throws IllegalStateException if the iteration has no more Nodes
+     */
+    public BTNode<T> nextNode() {
+        if (!hasNext()) {
+            throw new IllegalStateException("No more elements in the iteration.");
+        }
+        return stack.pop();
+    }
+
 
     /**
      * incomplete implementation, it'd be wise to call remove() from the binary tree itself on the node for this.

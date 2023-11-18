@@ -17,7 +17,7 @@
  * @author Ada Clevinger
  * @version Oct 19, 2023
  */
-public interface QueueADT <T>
+public interface QueueTwoStacksADT <T>
 {
     
     public abstract void enqueue(T element) throws QueueOverflowException;

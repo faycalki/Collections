@@ -6,21 +6,21 @@ package ADTsandDataStructures.Trees;
  * @version 1.1
  * @param <T> parameterized type
  */
-public class BSTNode<T> {
+public class BTNode<T> {
     private T data;
 
     private int duplicates;
-    private BSTNode<T> leftChild;
-    private BSTNode<T> rightChild;
+    private BTNode<T> leftChild;
+    private BTNode<T> rightChild;
 
-    public BSTNode(){
+    public BTNode(){
         this.data = null;
         this.leftChild = null;
         this.rightChild = null;
         duplicates = 0;
     }
 
-    public BSTNode(T inData){
+    public BTNode(T inData){
         this.data = inData;
         this.leftChild = null;
         this.rightChild = null;
@@ -33,19 +33,19 @@ public class BSTNode<T> {
         this.data = inData;
     }
 
-    public BSTNode<T> getLeftChild(){
+    public BTNode<T> getLeftChild(){
         return leftChild;
     }
 
-    public void setLeftChild(BSTNode<T> inLeftChild){
+    public void setLeftChild(BTNode<T> inLeftChild){
         leftChild = inLeftChild;
     }
 
-    public BSTNode<T> getRightChild(){
+    public BTNode<T> getRightChild(){
         return rightChild;
     }
 
-    public void setRightChild(BSTNode<T> inRightChild){
+    public void setRightChild(BTNode<T> inRightChild){
         rightChild = inRightChild;
     }
 

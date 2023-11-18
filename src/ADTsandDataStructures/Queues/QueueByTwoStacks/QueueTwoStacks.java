@@ -3,14 +3,14 @@
  * @author Faycal Kilali, Dylan Kim
  * @param <T> the type of Object held in the Queue
  */
-public class Queue<T> implements QueueADT <T> {
+public class QueueTwoStacks<T> implements QueueTwoStacksADT <T> {
     private int size;
     private Stack<T> mainStack;
     private Stack<T> helperStack;
     private boolean found;
     private int location;
 
-    public Queue(){
+    public QueueTwoStacks(){
         size = 0;
         mainStack = new Stack();
         helperStack = new Stack();
