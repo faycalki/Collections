@@ -1,5 +1,3 @@
-package ADTsandDataStructures.Trees;
-
 import java.util.Iterator;
 
 public interface BinaryTreeIteratorInterface<T> extends Iterator<T> {

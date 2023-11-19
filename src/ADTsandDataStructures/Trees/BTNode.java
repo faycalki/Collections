@@ -1,5 +1,3 @@
-package ADTsandDataStructures.Trees;
-
 /**
  * Node class for Binary Trees
  * @author Faycal Kilali

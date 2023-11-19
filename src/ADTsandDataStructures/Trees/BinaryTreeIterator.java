@@ -1,18 +1,20 @@
-package ADTsandDataStructures.Trees;
-
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.function.Consumer;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
- * An Iterator over trees using a Stack as the underlying data structure.
+ * An Iterator over trees using a Queue for direct traversals and a Stack for reverse traversals.
+ * @implSpec The reverse traversals are actually just reverses of which subtrees to visit, not reverses of the entire traversals. This is a bit misleading, so it is important to keep in mind. Refer to wikipedia for further information if needed.
+ * @implNote Level-Order traversal should be implemented as it can be quite useful for rebalancing purposes potentially.
  * @author Faycal Kilali
  * @version 1.0
- * @param <T>
+ * @param <T> the type of elements in the iterator
  */
 public class BinaryTreeIterator<T> implements Iterator<T> {
 
-
+    private Queue<BTNode<T>> queue;
     private Stack<BTNode<T>> stack;
     private Traversal traversalOrder;
 
@@ -25,136 +27,145 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
 
     public BinaryTreeIterator(BTNode<T> root, Traversal orderChoice){
         traversalOrder = orderChoice;
+        queue = new LinkedList<>();
         stack = new Stack<BTNode<T>>();
         if (root != null){
-            initializeStack(root);
+            initializeTraversal(root);
         }
     }
 
 
     /**
-     * Initialize stack based on available order implementations
+     * Initialize traversal based on available order implementations
      * @param node the node to begin traversing from
-     * @implNote The lowest element in the stack (at the bottom) is the first element traversed to.
-     * In other words, the order of pushing elements onto the stack determines the traversal order when popping them off. The first element pushed onto the stack is the first one to be processed, and the last element pushed is the last one to be processed.
      */
-    public void initializeStack(BTNode<T> node) {
+    public void initializeTraversal(BTNode<T> node) {
         switch (traversalOrder) {
             case PREORDER:
-                initializePreOrderStack(node);
+                initializePreOrder(node);
+                break;
             case INORDER:
-                initializeInOrderStack(node);
+                initializeInOrder(node);
+                break;
             case POSTORDER:
-                initializePostOrderStack(node);
+                initializePostOrder(node);
+                break;
             case PREORDER_REVERSE:
-                initializePreOrderReverseStack(node);
+                initializePreOrderReverse(node);
+                break;
             case INORDER_REVERSE:
-                initializeInOrderReverseStack(node);
+                initializeInOrderReverse(node);
+                break;
             case POSTORDER_REVERSE:
-                initializePostOrderReverseStack(node);
+                initializePostOrderReverse(node);
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported traversal order");
         }
     }
 
     /**
-     * Builds a stack that represents a traversal of the Binary Tree in Pre-order (NLR), also known as Depth-First Order.
+     * Builds a queue that represents a traversal of the Binary Tree in Pre-order (NLR), also known as Depth-First Order.
      * Precondition: parameterized node is not null.
      * @param node the current node to traverse from.
-     * @implNote
      */
-    private void initializePreOrderStack(BTNode<T> node){
+    private void initializePreOrder(BTNode<T> node){
 
         // General case
-        stack.push(node); // push current Node
+        queue.add(node); // enqueue current Node
 
         // Recursive Step
         if (node.getLeftChild() != null){ // base case is when both this check and the next check fail
-            initializePreOrderStack(node.getLeftChild()); // push left Node
+            initializePreOrder(node.getLeftChild()); // push left Node
         }
         if (node.getRightChild() != null){
-            initializePostOrderStack(node.getRightChild()); // push right Node
+            initializePreOrder(node.getRightChild()); // push right Node
         }
         }
 
     /**
-     * Initializes a stack that represents a traversal of the Binary Tree of In-Order (LNR).
+     * Initializes a queue that represents a traversal of the Binary Tree of In-Order (LNR).
      * Precondition: parameterized node is not null.
      * @param node the current node to traverse from.
      */
-    private void initializeInOrderStack(BTNode<T> node){
+    private void initializeInOrder(BTNode<T> node){
 
 
             if (node.getLeftChild() != null){
-                initializeInOrderStack(node.getLeftChild());
+                initializeInOrder(node.getLeftChild());
             }
-            stack.push(node);
+            queue.add(node);
             if (node.getRightChild() != null){
-                initializeInOrderStack(node.getRightChild());
+                initializeInOrder(node.getRightChild());
             }
 
         }
 
     /**
-     * Initialize the stack based upon post-order (LRN).
+     * Initialize the queue based upon post-order (LRN).
      * @param node the node to begin initializing from
      */
-    private void initializePostOrderStack(BTNode<T> node){
+    private void initializePostOrder(BTNode<T> node){
 
             if (node.getLeftChild() != null){
-                initializePostOrderStack(node.getLeftChild());
+                initializePostOrder(node.getLeftChild());
             }
             if (node.getRightChild() != null){
-                initializePostOrderStack(node.getRightChild());
+                initializePostOrder(node.getRightChild());
             }
-            stack.push(node);
+            queue.add(node);
         }
 
         // Now for the reverses.
+
 
     /**
      * Initializes the stack based upon reverse pre-order (NRL)
      * @param node the node to traverse from
      */
-    private void initializePreOrderReverseStack(BTNode<T> node) {
-        // General case
-        stack.push(node); // push current Node
-
-        // Recursive Step (this one is easy, we just reverse the order)
-        if (node.getRightChild() != null) {
-            initializePreOrderReverseStack(node.getRightChild()); // push right Node
+    private void initializePreOrderReverse(BTNode<T> node) {
+        if (node.getRightChild() != null){
+            initializePreOrderReverse(node.getLeftChild());
         }
-        if (node.getLeftChild() != null) {
-            initializePreOrderReverseStack(node.getLeftChild()); // push left Node
+        if (node.getLeftChild() != null){
+            initializePreOrderReverse(node.getRightChild());
         }
+        stack.push(node);
     }
 
     /**
      * Initializes the stack based upon reverse in-order (RNL)
      * @param node the node to traverse from
      */
-    private void initializeInOrderReverseStack(BTNode<T> node) {
+    private void initializeInOrderReverse(BTNode<T> node) {
         if (node.getLeftChild() != null) {
-            initializeInOrderReverseStack(node.getLeftChild());
+            initializeInOrderReverse(node.getLeftChild());
         }
         stack.push(node);
         if (node.getRightChild() != null) {
-            initializeInOrderReverseStack(node.getRightChild());
+            initializeInOrderReverse(node.getRightChild());
         }
     }
 
+
+
     /**
-     * Initializes the stack based upon reverse Post-Order (RLN)
+     * Initializes the stack to produce reverse Post-Order (RNL)
      * @param node the node to traverse from
      */
-    private void initializePostOrderReverseStack(BTNode<T> node) {
-        if (node.getRightChild() != null){
-            initializePostOrderReverseStack(node.getRightChild());
+    private void initializePostOrderReverse(BTNode<T> node) {
+
+
+        // Recursive Step
+        if (node.getRightChild() != null) {
+            initializePostOrderReverse(node.getRightChild());
         }
-        if (node.getLeftChild() != null){
-            initializePostOrderReverseStack(node.getLeftChild());
+        if (node.getLeftChild() != null) {
+            initializePostOrderReverse(node.getLeftChild());
         }
-        stack.push(node);
+
+        // General case
+        queue.add(node); // push current Node
     }
 
 
@@ -168,7 +179,11 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
      */
     @Override
     public boolean hasNext() {
-        return !stack.isEmpty();
+        if (!stack.isEmpty() || !queue.isEmpty()){
+            return true;
+        }
+        return false;
+        //return !stack.isEmpty();
     }
 
     /**
@@ -182,7 +197,22 @@ public class BinaryTreeIterator<T> implements Iterator<T> {
         if (!hasNext()) {
             throw new IllegalStateException("No more elements in the iteration.");
         }
-        return stack.pop().getData();
+        return getNext().getData();
+    }
+
+    private BTNode<T> getNext() {
+        switch (traversalOrder) {
+            case PREORDER:
+            case INORDER:
+            case POSTORDER:
+            case POSTORDER_REVERSE:
+                return queue.remove();
+            case PREORDER_REVERSE:
+            case INORDER_REVERSE:
+                return stack.pop();
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     /**

@@ -1,5 +1,3 @@
-package ADTsandDataStructures.Trees;
-import ADTsandDataStructures.CollectionADT;
 import java.util.Iterator;
 
 /**

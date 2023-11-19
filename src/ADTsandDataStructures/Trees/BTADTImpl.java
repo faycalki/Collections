@@ -1,5 +1,3 @@
-package ADTsandDataStructures.Trees;
-
 import java.util.Iterator;
 
 public class BTADTImpl<T> implements BTADT<T> {
@@ -25,6 +23,7 @@ public class BTADTImpl<T> implements BTADT<T> {
         if (root == null){
             BTNode<T> newNode = new BTNode(element);
             root = newNode;
+            size++;
             return true; // successfully added
         }
 
@@ -113,6 +112,12 @@ public class BTADTImpl<T> implements BTADT<T> {
      */
     @Override
     public T get (T target){
+
+        // Patch for in-order traversals, check root first
+        if (root.getData().equals(target)){
+            return target;
+        }
+
         Iterator<T> iterator = getInOrderIterator(); // Perhaps there's a decent way to determine a form of traversal that isn't hard-coded
         while (iterator.hasNext()) {
             T current = iterator.next();
@@ -232,6 +237,12 @@ public class BTADTImpl<T> implements BTADT<T> {
                 return getInOrderIterator();
             case POSTORDER:
                 return getPostOrderIterator();
+            case PREORDER_REVERSE:
+                return getReversePreOrderIterator();
+            case INORDER_REVERSE:
+                return getReverseInOrderIterator();
+            case POSTORDER_REVERSE:
+                return getReversePostOrderIterator();
             default:
                 throw new IllegalArgumentException("Unsupported traversal order");
         }
@@ -262,10 +273,38 @@ public class BTADTImpl<T> implements BTADT<T> {
         return iterator;
     }
 
+    private Iterator<T> getReversePreOrderIterator () {
+        BinaryTreeIterator<T> iterator = new BinaryTreeIterator<T>(root, BinaryTreeIterator.Traversal.PREORDER_REVERSE);
+        return iterator;
+    }
+
+    private Iterator<T> getReverseInOrderIterator () {
+        BinaryTreeIterator<T> iterator = new BinaryTreeIterator<T>(root, BinaryTreeIterator.Traversal.INORDER_REVERSE);
+        return iterator;
+    }
+
+    private Iterator<T> getReversePostOrderIterator () {
+        BinaryTreeIterator<T> iterator = new BinaryTreeIterator<T>(root, BinaryTreeIterator.Traversal.POSTORDER_REVERSE);
+        return iterator;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        Iterator<T> iterator = getInOrderIterator(); // Default to inorder traversal
+        Iterator<T> iterator = getIterator(Traversal.INORDER);
+
+        while (iterator.hasNext()) {
+            result.append(iterator.next()).append(" ");
+        }
+
+        return result.toString();
+    }
+
+
+    @Override
+    public String toString(Traversal orderType) {
+        StringBuilder result = new StringBuilder();
+        Iterator<T> iterator = getIterator(orderType);
 
         while (iterator.hasNext()) {
             result.append(iterator.next()).append(" ");

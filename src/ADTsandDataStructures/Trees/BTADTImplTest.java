@@ -1,5 +1,3 @@
-package ADTsandDataStructures.Trees;
-
 import org.junit.jupiter.api.Test;
 import java.util.Iterator;
 
@@ -160,9 +158,9 @@ class BTADTImplTest {
         // Check if elements are traversed in the correct order
         switch (traversalOrder) {
             case PREORDER:
-                assertEquals(5, iterator.next());
-                assertEquals(3, iterator.next());
-                assertEquals(7, iterator.next());
+                assertEquals(5, iterator.next()); // N
+                assertEquals(3, iterator.next()); // L
+                assertEquals(7, iterator.next()); // R
                 break;
             case INORDER:
                 assertEquals(3, iterator.next());
@@ -200,7 +198,7 @@ class BTADTImplTest {
         tree.add(2);
         tree.add(1);
         tree.add(3);
-        assertEquals("1 2 3 ", tree.toString());
+        assertEquals("1 2 3 ", tree.toString(BTADT.Traversal.INORDER));
     }
 
     @Test
@@ -209,7 +207,7 @@ class BTADTImplTest {
         tree.add(2);
         tree.add(1);
         tree.add(3);
-        assertEquals("2 1 3 ", tree.getIterator(BTADT.Traversal.PREORDER).toString());
+        assertEquals("2 1 3 ", tree.toString(BTADT.Traversal.PREORDER));
     }
 
     @Test
@@ -218,7 +216,7 @@ class BTADTImplTest {
         tree.add(2);
         tree.add(1);
         tree.add(3);
-        assertEquals("1 3 2 ", tree.getIterator(BTADT.Traversal.POSTORDER).toString());
+        assertEquals("1 3 2 ", tree.toString(BTADT.Traversal.POSTORDER));
     }
 
     @Test
@@ -227,7 +225,7 @@ class BTADTImplTest {
         tree.add(2);
         tree.add(1);
         tree.add(3);
-        assertEquals("3 2 1 ", tree.getIterator(BTADT.Traversal.INORDER_REVERSE).toString());
+        assertEquals("3 2 1 ", tree.toString(BTADT.Traversal.INORDER_REVERSE));
     }
 
     @Test
@@ -236,16 +234,16 @@ class BTADTImplTest {
         tree.add(2);
         tree.add(1);
         tree.add(3);
-        assertEquals("3 1 2 ", tree.getIterator(BTADT.Traversal.PREORDER_REVERSE).toString());
+        assertEquals("2 3 1 ", tree.toString(BTADT.Traversal.PREORDER_REVERSE));
     }
 
     @Test
     void testToStringPostOrderReverse() {
         BTADT<Integer> tree = new BTADTImpl<>();
         tree.add(2);
-        tree.add(1);
         tree.add(3);
-        assertEquals("2 3 1 ", tree.getIterator(BTADT.Traversal.POSTORDER_REVERSE).toString());
+        tree.add(1);
+        assertEquals("1 3 2 ", tree.toString(BTADT.Traversal.POSTORDER_REVERSE));
     }
 
 

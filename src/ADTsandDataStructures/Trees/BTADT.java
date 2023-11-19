@@ -1,5 +1,3 @@
-package ADTsandDataStructures.Trees;
-import ADTsandDataStructures.CollectionADT;
 import java.util.Iterator;
 
 /**
@@ -69,4 +67,6 @@ public interface BTADT<T> extends CollectionADT<T>, Iterable<T> {
      * @return a string representation of the tree
      */
     String toString();
+
+    String toString(Traversal orderType);
 }
